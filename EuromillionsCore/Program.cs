@@ -22,7 +22,7 @@ namespace EuromillionsCore
 
             var startup = new Startup();
 
-            // Request services instances from the service pipeline built
+            // Request services instances from the service pipeline
             
             IDataService dataService = startup.Provider.GetRequiredService<IDataService>();
             INunofcService nunofcService = startup.Provider.GetRequiredService<INunofcService>();
@@ -70,7 +70,7 @@ namespace EuromillionsCore
                 // Update past draws list with last draw
 
                 dataService.UpdateFile(draws, lastDraw);
-            }            
+            }
         }
     }
 }
