@@ -9,7 +9,7 @@ namespace EuromillionsCore.Interfaces
 {
     interface INunofcService
     {
-        public Task<Draw> GetLastAsync();
-        public Task<List<Draw>> GetAllAsync();
+        Task<Draw> GetLastAsync();
+        Task<List<Draw>> GetAllAsync();
     }
 }
