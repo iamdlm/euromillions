@@ -29,7 +29,7 @@ namespace EuroMillionsAI.Models
         private static int[] PopulateArrayConsecutively(int length)
         {
             int[] res = new int[length];
-            
+
             for (int i = 0; i < length; i++)
             {
                 res[i] = i + 1;
