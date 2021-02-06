@@ -50,20 +50,16 @@ namespace EuroMillionsAI.Services
                 return null;
             }
 
-            return Convert(json);
+            return ConvertJsonToDraw(json);
         }
 
-        private List<Draw> Convert(string json)
+        private List<Draw> ConvertJsonToDraw(string json)
         {
             DrawsDTO drawsAll = JsonSerializer.Deserialize<DrawsDTO>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            DateTime firstDraw = DateTime.Parse(config.GetSection("FirstDraw").Value, new CultureInfo("en-US", true));
-
-            List<DrawDTO> drawsDTO = drawsAll.Drawns.Where(x => x.Date >= firstDraw).ToList();
-
             List<Draw> draws = new List<Draw>();
 
-            foreach (DrawDTO draw in drawsDTO.OrderByDescending(o => o.Date))
+            foreach (DrawDTO draw in drawsAll.Drawns.OrderByDescending(o => o.Date))
             {
                 draws.Add(new Draw
                 {
