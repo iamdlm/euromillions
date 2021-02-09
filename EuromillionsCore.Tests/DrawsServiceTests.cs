@@ -17,9 +17,9 @@ namespace EuromillionsCore.Tests
             {
                 Date = DateTime.Now,
                 Numbers = new int[] { 4, 10, 20, 23, 45 },
-                Stars = new int[] {2, 3}
+                Stars = new int[] { 2, 3 }
             };
-            
+
             bool result = drawsService.IsDrawValid(draw);
 
             Assert.IsTrue(result, "Draw sum is in range.");
@@ -61,7 +61,7 @@ namespace EuromillionsCore.Tests
             {
                 Date = DateTime.Now,
                 Numbers = new int[] { 2, 12, 24, 27, 35 },
-                
+
                 Stars = new int[] { 1, 7 }
             };
 
@@ -139,6 +139,148 @@ namespace EuromillionsCore.Tests
             bool result = drawsService.IsDrawValid(draw);
 
             Assert.IsFalse(result, "Draw can't be sequential number.");
+        }
+
+        [TestMethod]
+        public void EvaluatePrize_HasPrize_True()
+        {
+            var drawsService = new DrawsService();
+
+            Draw drawnKey = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 21, 22, 23, 24, 25 },
+                Stars = new int[] { 2, 3 }
+            };
+
+            Draw firstPrize = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 21, 22, 23, 24, 25 },
+                Stars = new int[] { 2, 3 }
+            };
+
+            Draw secondPrize = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 21, 22, 23, 24, 25 },
+                Stars = new int[] { 2, 4 }
+            };
+
+            Draw thirdPrize = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 21, 22, 23, 24, 25 },
+                Stars = new int[] { 1, 4 }
+            };
+
+            Draw fourthPrize = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 20, 22, 23, 24, 25 },
+                Stars = new int[] { 2, 3 }
+            };
+
+            Draw fifthPrize = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 20, 22, 23, 24, 25 },
+                Stars = new int[] { 2, 4 }
+            };
+
+            Draw sixthPrize = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 21, 22, 23, 26, 27 },
+                Stars = new int[] { 2, 3 }
+            };
+
+            Draw seventhPrize = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 21, 22, 23, 24, 27 },
+                Stars = new int[] { 1, 4 }
+            };
+
+            Draw eighthPrize = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 21, 22, 27, 28, 29 },
+                Stars = new int[] { 2, 3 }
+            };
+
+            Draw ninthPrize = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 21, 22, 23, 28, 29 },
+                Stars = new int[] { 2, 4 }
+            };
+
+            Draw tenthPrize = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 21, 22, 23, 28, 29 },
+                Stars = new int[] { 1, 4 }
+            };
+
+            Draw eleventhPrize = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 21, 28, 29, 30, 31 },
+                Stars = new int[] { 2, 3 }
+            };
+
+            Draw twelfthPrize = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 21, 22, 27, 28, 29 },
+                Stars = new int[] { 2, 4 }
+            };
+
+            Draw thirteenthPrize = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 21, 22, 27, 28, 29 },
+                Stars = new int[] { 1, 4 }
+            };
+
+            Draw noMatches = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 11, 12, 17, 18, 19 },
+                Stars = new int[] { 1, 4 }
+            };
+
+            Draw oneNumberOneStar = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 21, 12, 17, 18, 19 },
+                Stars = new int[] { 2, 4 }
+            };
+
+            Draw oneNumber = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 21, 12, 17, 18, 19 },
+                Stars = new int[] { 1, 4 }
+            };
+
+            Assert.AreEqual(1, drawsService.EvaluatePrize(drawnKey, firstPrize), "1st prize.");
+            Assert.AreEqual(2, drawsService.EvaluatePrize(drawnKey, secondPrize), "2nd prize.");
+            Assert.AreEqual(3, drawsService.EvaluatePrize(drawnKey, thirdPrize), "3rd prize.");
+            Assert.AreEqual(4, drawsService.EvaluatePrize(drawnKey, fourthPrize), "4th prize.");
+            Assert.AreEqual(5, drawsService.EvaluatePrize(drawnKey, fifthPrize), "5th prize.");
+            Assert.AreEqual(6, drawsService.EvaluatePrize(drawnKey, sixthPrize), "6th prize.");
+            Assert.AreEqual(7, drawsService.EvaluatePrize(drawnKey, seventhPrize), "7th prize.");
+            Assert.AreEqual(8, drawsService.EvaluatePrize(drawnKey, eighthPrize), "8th prize.");
+            Assert.AreEqual(9, drawsService.EvaluatePrize(drawnKey, ninthPrize), "9th prize.");
+            Assert.AreEqual(10, drawsService.EvaluatePrize(drawnKey, tenthPrize), "10th prize.");
+            Assert.AreEqual(11, drawsService.EvaluatePrize(drawnKey, eleventhPrize), "11th prize.");
+            Assert.AreEqual(12, drawsService.EvaluatePrize(drawnKey, twelfthPrize), "12th prize.");
+            Assert.AreEqual(13, drawsService.EvaluatePrize(drawnKey, thirteenthPrize), "13th prize.");
+            Assert.AreEqual(0, drawsService.EvaluatePrize(drawnKey, noMatches), "No prize.");
+            Assert.AreEqual(0, drawsService.EvaluatePrize(drawnKey, oneNumberOneStar), "No prize.");
+            Assert.AreEqual(0, drawsService.EvaluatePrize(drawnKey, oneNumber), "No prize.");
         }
     }
 }

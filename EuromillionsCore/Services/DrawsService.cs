@@ -51,6 +51,80 @@ namespace EuromillionsCore.Services
             return true;
         }
 
+        public int EvaluatePrize(Draw drawnKey, Draw draw)
+        {
+            int numbers = drawnKey.Numbers.Intersect(draw.Numbers).Count();
+
+            int stars = drawnKey.Stars.Intersect(draw.Stars).Count();
+
+            if (numbers == 5)
+            {
+                switch (stars)
+                {
+                    case 2:
+                        return 1;
+                    case 1:
+                        return 2;
+                    case 0:
+                        return 3;
+                    default:
+                        break;
+                }
+            }
+
+            if (numbers == 4)
+            {
+                switch (stars)
+                {
+                    case 2:
+                        return 4;
+                    case 1:
+                        return 5;
+                    case 0:
+                        return 7;
+                    default:
+                        break;
+                }                
+            }
+
+            if (numbers == 3)
+            {
+                switch (stars)
+                {
+                    case 2:
+                        return 6;
+                    case 1:
+                        return 9;
+                    case 0:
+                        return 10;
+                    default:
+                        break;
+                }
+            }
+
+            if(numbers == 2)
+            {
+                switch (stars)
+                {
+                    case 2:
+                        return 8;
+                    case 1:
+                        return 12;
+                    case 0:
+                        return 13;
+                    default:
+                        break;
+                }
+            }
+
+            if(numbers == 1 && stars == 2)
+            {
+                return 11;
+            }
+
+            return 0;
+        }
+
         private static bool IsSumInRange(int[] arr, int min, int max)
         {
             return arr.Sum() >= min && arr.Sum() <= max;
