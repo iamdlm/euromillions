@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 
@@ -49,7 +50,7 @@ namespace EuromillionsCore.Services
 
         public void SaveFile(List<Draw> draws)
         {
-            string json = JsonSerializer.Serialize(draws);
+            string json = JsonSerializer.Serialize(draws.OrderByDescending(o => o.Date).ToList());
 
             File.WriteAllText(config.GetSection("FilePath").Value, json);
 
