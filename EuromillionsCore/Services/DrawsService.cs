@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EuromillionsCore.Extensions;
+using Microsoft.Extensions.Configuration;
 
 namespace EuromillionsCore.Services
 {
@@ -12,48 +13,68 @@ namespace EuromillionsCore.Services
         private readonly int NUMBERS_LOWER_LIMIT = 95;
         private readonly int NUMBERS_UPPER_LIMIT = 160;
 
-        public Draw Generate()
+        IConfiguration config;
+
+        public DrawsService(IConfiguration _config)
         {
-            while (true)
-            {
-                Draw draw = new Draw();
-
-                IsDrawValid(draw, NUMBERS_LOWER_LIMIT, NUMBERS_UPPER_LIMIT);
-
-                return draw;
-            }
+            this.config = _config;
         }
 
-        public Draw Generate(List<Draw> previousDraws)
+        public List<Draw> Generate()
         {
-            while (true)
+            return Generate(null);
+        }
+
+        public List<Draw> Generate(List<Draw> previousDraws)
+        {
+            int keys = 1;
+
+            try
+            {
+                keys = Convert.ToInt32(config.GetSection("NumberOfKeys").Value);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            List<Draw> draws = new List<Draw>();
+
+            for (int i = 0; i < keys; i++)
             {
                 Draw draw = new Draw();
 
                 IsDrawValid(draw, previousDraws);
 
-                return draw;
+                draws.Add(draw);
             }
-        }
+
+            return draws;
+        }        
 
         public bool IsDrawValid(Draw draw)
         {
-            return IsDrawValid(draw, NUMBERS_LOWER_LIMIT, NUMBERS_UPPER_LIMIT);
+            return IsDrawValid(draw, null);
         }
 
         public bool IsDrawValid(Draw draw, List<Draw> previousDraws)
         {
-            // Remove draws already drawn
-
-            if (!IsNotEqualPastDraws(draw, previousDraws))
+            if (previousDraws != null)
             {
-                return false;
+                // Remove draws already drawn
+
+                if (!IsNotEqualPastDraws(draw, previousDraws))
+                {
+                    return false;
+                }
+
+                int average = MathExtensions.Average(previousDraws);
+                int stdDev = MathExtensions.StandardDeviation(previousDraws, average);
+
+                return IsDrawValid(draw, MathExtensions.LowerLimit(average, stdDev), MathExtensions.UpperLimit(average, stdDev));
             }
 
-            int average = MathExtensions.Average(previousDraws);
-            int stdDev = MathExtensions.StandardDeviation(previousDraws, average);
-
-            return IsDrawValid(draw, MathExtensions.LowerLimit(average, stdDev), MathExtensions.UpperLimit(average, stdDev));
+            return IsDrawValid(draw, NUMBERS_LOWER_LIMIT, NUMBERS_UPPER_LIMIT);
         }
 
         private bool IsDrawValid(Draw draw, int min, int max)
@@ -81,7 +102,7 @@ namespace EuromillionsCore.Services
 
             return true;
         }
-        
+
 
         private bool IsNotEqualPastDraws(Draw draw, List<Draw> previousDraws)
         {

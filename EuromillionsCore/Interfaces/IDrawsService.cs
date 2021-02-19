@@ -5,9 +5,9 @@ namespace EuromillionsCore.Interfaces
 {
     interface IDrawsService
     {
-        Draw Generate();
+        List<Draw> Generate();
 
-        Draw Generate(List<Draw> previousDraws);
+        List<Draw> Generate(List<Draw> previousDraws);
 
         bool IsDrawValid(Draw draw);
 
