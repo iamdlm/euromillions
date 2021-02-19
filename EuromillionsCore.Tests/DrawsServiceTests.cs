@@ -17,9 +17,9 @@ namespace EuromillionsCore.Tests
             {
                 Date = DateTime.Now,
                 Numbers = new int[] { 4, 10, 20, 23, 45 },
-                Stars = new int[] {2, 3}
+                Stars = new int[] { 2, 3 }
             };
-            
+
             bool result = drawsService.IsDrawValid(draw);
 
             Assert.IsTrue(result, "Draw sum is in range.");
@@ -61,7 +61,7 @@ namespace EuromillionsCore.Tests
             {
                 Date = DateTime.Now,
                 Numbers = new int[] { 2, 12, 24, 27, 35 },
-                
+
                 Stars = new int[] { 1, 7 }
             };
 
