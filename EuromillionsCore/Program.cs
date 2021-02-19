@@ -21,6 +21,7 @@ namespace EuromillionsCore
             IDataService dataService = startup.Provider.GetRequiredService<IDataService>();
             INunofcService nunofcService = startup.Provider.GetRequiredService<INunofcService>();
             IDrawsService drawsService = startup.Provider.GetRequiredService<IDrawsService>();
+            IMailService mailService = startup.Provider.GetRequiredService<IMailService>();
 
             // List of past draws
 
@@ -69,7 +70,13 @@ namespace EuromillionsCore
                 }
             }
 
-            Draw draw = drawsService.Generate();
+            List<Draw> genDraws = drawsService.Generate(draws);
+
+            Console.WriteLine("New keys generated.");
+
+            mailService.Send(genDraws);
+
+            Console.WriteLine("New keys sent by email.");
         }
     }
 }
