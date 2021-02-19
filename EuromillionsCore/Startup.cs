@@ -57,6 +57,8 @@ namespace EuromillionsCore
         {
             services.AddSingleton<IDataService, DataService>();
             services.AddSingleton<INunofcService, NunofcService>();
+            services.AddSingleton<IDrawsService, DrawsService>();
+            services.AddSingleton<IMailService, MailService>();
         }
     }
 }
