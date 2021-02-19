@@ -1,10 +1,9 @@
-﻿using EuroMillionsAI.Models;
-using EuromillionsCore.Interfaces;
+﻿using EuromillionsCore.Interfaces;
+using EuromillionsCore.Models;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Text.Json;
 
 namespace EuromillionsCore.Services
@@ -56,13 +55,15 @@ namespace EuromillionsCore.Services
             Console.WriteLine("Past draws list saved.");
         }
 
-        public void UpdateFile(List<Draw> draws, Draw lastDraw)
+        public List<Draw> UpdateFile(List<Draw> draws, Draw lastDraw)
         {
             draws.Add(lastDraw);
 
             SaveFile(draws);
 
             Console.WriteLine("Past draws list updated.");
+
+            return draws;
         }
     }
 }

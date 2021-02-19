@@ -1,25 +1,36 @@
-﻿using EuroMillionsAI.DTOs;
-using EuroMillionsAI.Models;
+﻿using EuromillionsCore.Models;
 using EuromillionsCore.Interfaces;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Text.Json;
+using EuromillionsCore.Extensions;
 
 namespace EuromillionsCore.Services
 {
     public class DrawsService : IDrawsService
     {
+        private readonly int NUMBERS_LOWER_LIMIT = 95;
+        private readonly int NUMBERS_UPPER_LIMIT = 160;
+
         public Draw Generate()
         {
             while (true)
             {
                 Draw draw = new Draw();
 
-                IsDrawValid(draw);
+                IsDrawValid(draw, NUMBERS_LOWER_LIMIT, NUMBERS_UPPER_LIMIT);
+
+                return draw;
+            }
+        }
+
+        public Draw Generate(List<Draw> previousDraws)
+        {
+            while (true)
+            {
+                Draw draw = new Draw();
+
+                IsDrawValid(draw, previousDraws);
 
                 return draw;
             }
@@ -27,9 +38,29 @@ namespace EuromillionsCore.Services
 
         public bool IsDrawValid(Draw draw)
         {
+            return IsDrawValid(draw, NUMBERS_LOWER_LIMIT, NUMBERS_UPPER_LIMIT);
+        }
+
+        public bool IsDrawValid(Draw draw, List<Draw> previousDraws)
+        {
+            // Remove draws already drawn
+
+            if (!IsNotEqualPastDraws(draw, previousDraws))
+            {
+                return false;
+            }
+
+            int average = MathExtensions.Average(previousDraws);
+            int stdDev = MathExtensions.StandardDeviation(previousDraws, average);
+
+            return IsDrawValid(draw, MathExtensions.LowerLimit(average, stdDev), MathExtensions.UpperLimit(average, stdDev));
+        }
+
+        private bool IsDrawValid(Draw draw, int min, int max)
+        {
             // Remove all draws outside of range [min, max]
 
-            if (!IsSumInRange(draw.Numbers, 95, 160))
+            if (!IsSumInRange(draw.Numbers, min, max))
             {
                 return false;
             }
@@ -44,6 +75,17 @@ namespace EuromillionsCore.Services
             // Removed sequential numbers
 
             if (CountSequentialNumbers(draw.Numbers) == draw.Numbers.Length - 1)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        
+
+        private bool IsNotEqualPastDraws(Draw draw, List<Draw> previousDraws)
+        {
+            if (previousDraws.FirstOrDefault(d => d.Numbers.SequenceEqual(draw.Numbers) && d.Stars.SequenceEqual(draw.Stars)) != null)
             {
                 return false;
             }

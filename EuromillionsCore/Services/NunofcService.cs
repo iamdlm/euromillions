@@ -1,19 +1,15 @@
-﻿using EuroMillionsAI.DTOs;
-using EuroMillionsAI.Models;
+﻿using EuromillionsCore.DTOs;
 using EuromillionsCore.Interfaces;
+using EuromillionsCore.Models;
+using EuromillionsCore.Services;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace EuroMillionsAI.Services
+namespace EuromillionsCore.Services
 {
     // Source: https://nunofcguerreiro.com/blog/euro-milhoes-api
     public class NunofcService : INunofcService

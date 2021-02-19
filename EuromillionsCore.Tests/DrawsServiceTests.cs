@@ -1,4 +1,4 @@
-using EuroMillionsAI.Models;
+using EuromillionsCore.Models;
 using EuromillionsCore.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;

@@ -1,6 +1,4 @@
-﻿using EuroMillionsAI.Services;
-using EuromillionsCore.Configurations;
-using EuromillionsCore.Interfaces;
+﻿using EuromillionsCore.Interfaces;
 using EuromillionsCore.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

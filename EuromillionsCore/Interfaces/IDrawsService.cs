@@ -1,7 +1,5 @@
-﻿using EuroMillionsAI.Models;
-using System;
+﻿using EuromillionsCore.Models;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EuromillionsCore.Interfaces
 {
@@ -9,6 +7,10 @@ namespace EuromillionsCore.Interfaces
     {
         Draw Generate();
 
+        Draw Generate(List<Draw> previousDraws);
+
         bool IsDrawValid(Draw draw);
+
+        bool IsDrawValid(Draw draw, List<Draw> previousDraws);
     }
 }

@@ -1,9 +1,9 @@
-﻿using EuroMillionsAI.DTOs;
+﻿using EuromillionsCore.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EuroMillionsAI.Models
+namespace EuromillionsCore.Models
 {
     public class DrawsDTO
     {
