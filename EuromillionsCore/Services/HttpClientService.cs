@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace EuroMillionsAI.Services
+namespace EuromillionsCore.Services
 {
     public static class HttpClientService
     {

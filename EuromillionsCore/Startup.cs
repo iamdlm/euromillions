@@ -1,6 +1,4 @@
-﻿using EuroMillionsAI.Services;
-using EuromillionsCore.Configurations;
-using EuromillionsCore.Interfaces;
+﻿using EuromillionsCore.Interfaces;
 using EuromillionsCore.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -59,6 +57,8 @@ namespace EuromillionsCore
         {
             services.AddSingleton<IDataService, DataService>();
             services.AddSingleton<INunofcService, NunofcService>();
+            services.AddSingleton<IDrawsService, DrawsService>();
+            services.AddSingleton<IMailService, MailService>();
         }
     }
 }

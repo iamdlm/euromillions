@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace EuroMillionsAI.Models
+namespace EuromillionsCore.Models
 {
     public class Draw
     {
@@ -15,6 +15,7 @@ namespace EuroMillionsAI.Models
         {
             this.Numbers = GetSortedArray(50, 5);
             this.Stars = GetSortedArray(12, 2);
+            this.Date = DateTime.Now;
         }
 
         private static int[] GetSortedArray(int length, int numbers)

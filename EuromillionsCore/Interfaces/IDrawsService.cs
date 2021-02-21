@@ -1,14 +1,16 @@
-﻿using EuroMillionsAI.Models;
-using System;
+﻿using EuromillionsCore.Models;
 using System.Collections.Generic;
-using System.Text;
 
 namespace EuromillionsCore.Interfaces
 {
     interface IDrawsService
     {
-        Draw Generate();
+        List<Draw> Generate();
+
+        List<Draw> Generate(List<Draw> previousDraws);
 
         bool IsDrawValid(Draw draw);
+
+        bool IsDrawValid(Draw draw, List<Draw> previousDraws);
     }
 }

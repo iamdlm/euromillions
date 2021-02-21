@@ -1,17 +1,34 @@
-using EuroMillionsAI.Models;
+using EuromillionsCore.Models;
 using EuromillionsCore.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.IO;
 
 namespace EuromillionsCore.Tests
 {
     [TestClass]
     public class DrawsServiceTests
     {
+        IConfiguration config;
+
+        [TestInitialize]
+        public void Init()
+        {
+            string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            this.config = new ConfigurationBuilder()
+                           .SetBasePath(Directory.GetCurrentDirectory())
+                           .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                           .AddJsonFile($"appsettings.{environment}.json", optional: true)
+                           .AddEnvironmentVariables()
+                           .Build();
+        }
+
         [TestMethod]
         public void IsDrawValid_SumInRange_True()
         {
-            var drawsService = new DrawsService();
+            var drawsService = new DrawsService(config);
 
             Draw draw = new Draw
             {
@@ -28,7 +45,7 @@ namespace EuromillionsCore.Tests
         [TestMethod]
         public void IsDrawValid_SumInRange_False()
         {
-            var drawsService = new DrawsService();
+            var drawsService = new DrawsService(config);
 
             Draw drawBellowRange = new Draw
             {
@@ -55,7 +72,7 @@ namespace EuromillionsCore.Tests
         [TestMethod]
         public void IsDrawValid_IsEvenNumbersCountInRange_True()
         {
-            var drawsService = new DrawsService();
+            var drawsService = new DrawsService(config);
 
             Draw drawEvenOverOdd = new Draw
             {
@@ -83,7 +100,7 @@ namespace EuromillionsCore.Tests
         [TestMethod]
         public void IsDrawValid_IsEvenNumbersCountInRange_False()
         {
-            var drawsService = new DrawsService();
+            var drawsService = new DrawsService(config);
 
             Draw drawAllEven = new Draw
             {
@@ -110,7 +127,7 @@ namespace EuromillionsCore.Tests
         [TestMethod]
         public void IsDrawValid_IsSequentialNumber_True()
         {
-            var drawsService = new DrawsService();
+            var drawsService = new DrawsService(config);
 
             Draw draw = new Draw
             {
@@ -127,7 +144,7 @@ namespace EuromillionsCore.Tests
         [TestMethod]
         public void IsDrawValid_IsSequentialNumber_False()
         {
-            var drawsService = new DrawsService();
+            var drawsService = new DrawsService(config);
 
             Draw draw = new Draw
             {

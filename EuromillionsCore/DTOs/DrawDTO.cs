@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace EuroMillionsAI.DTOs
+namespace EuromillionsCore.DTOs
 {
     public class DrawDTO
     {

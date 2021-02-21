@@ -1,35 +1,87 @@
-﻿using EuroMillionsAI.DTOs;
-using EuroMillionsAI.Models;
+﻿using EuromillionsCore.Models;
 using EuromillionsCore.Interfaces;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Text.Json;
+using EuromillionsCore.Extensions;
+using Microsoft.Extensions.Configuration;
 
 namespace EuromillionsCore.Services
 {
     public class DrawsService : IDrawsService
     {
-        public Draw Generate()
+        private readonly int NUMBERS_LOWER_LIMIT = 95;
+        private readonly int NUMBERS_UPPER_LIMIT = 160;
+
+        IConfiguration config;
+
+        public DrawsService(IConfiguration _config)
         {
-            while (true)
+            this.config = _config;
+        }
+
+        public List<Draw> Generate()
+        {
+            return Generate(null);
+        }
+
+        public List<Draw> Generate(List<Draw> previousDraws)
+        {
+            int keys = 1;
+
+            try
+            {
+                keys = Convert.ToInt32(config.GetSection("NumberOfKeys").Value);
+            }
+            catch (Exception)
+            {
+
+            }
+
+            List<Draw> draws = new List<Draw>();
+
+            for (int i = 0; i < keys; i++)
             {
                 Draw draw = new Draw();
 
-                IsDrawValid(draw);
+                IsDrawValid(draw, previousDraws);
 
-                return draw;
+                draws.Add(draw);
             }
-        }
+
+            return draws;
+        }        
 
         public bool IsDrawValid(Draw draw)
         {
+            return IsDrawValid(draw, null);
+        }
+
+        public bool IsDrawValid(Draw draw, List<Draw> previousDraws)
+        {
+            if (previousDraws != null)
+            {
+                // Remove draws already drawn
+
+                if (!IsNotEqualPastDraws(draw, previousDraws))
+                {
+                    return false;
+                }
+
+                int average = MathExtensions.Average(previousDraws);
+                int stdDev = MathExtensions.StandardDeviation(previousDraws, average);
+
+                return IsDrawValid(draw, MathExtensions.LowerLimit(average, stdDev), MathExtensions.UpperLimit(average, stdDev));
+            }
+
+            return IsDrawValid(draw, NUMBERS_LOWER_LIMIT, NUMBERS_UPPER_LIMIT);
+        }
+
+        private bool IsDrawValid(Draw draw, int min, int max)
+        {
             // Remove all draws outside of range [min, max]
 
-            if (!IsSumInRange(draw.Numbers, 95, 160))
+            if (!IsSumInRange(draw.Numbers, min, max))
             {
                 return false;
             }
@@ -51,78 +103,15 @@ namespace EuromillionsCore.Services
             return true;
         }
 
-        public int EvaluatePrize(Draw drawnKey, Draw draw)
+
+        private bool IsNotEqualPastDraws(Draw draw, List<Draw> previousDraws)
         {
-            int numbers = drawnKey.Numbers.Intersect(draw.Numbers).Count();
-
-            int stars = drawnKey.Stars.Intersect(draw.Stars).Count();
-
-            if (numbers == 5)
+            if (previousDraws.FirstOrDefault(d => d.Numbers.SequenceEqual(draw.Numbers) && d.Stars.SequenceEqual(draw.Stars)) != null)
             {
-                switch (stars)
-                {
-                    case 2:
-                        return 1;
-                    case 1:
-                        return 2;
-                    case 0:
-                        return 3;
-                    default:
-                        break;
-                }
+                return false;
             }
 
-            if (numbers == 4)
-            {
-                switch (stars)
-                {
-                    case 2:
-                        return 4;
-                    case 1:
-                        return 5;
-                    case 0:
-                        return 7;
-                    default:
-                        break;
-                }                
-            }
-
-            if (numbers == 3)
-            {
-                switch (stars)
-                {
-                    case 2:
-                        return 6;
-                    case 1:
-                        return 9;
-                    case 0:
-                        return 10;
-                    default:
-                        break;
-                }
-            }
-
-            if(numbers == 2)
-            {
-                switch (stars)
-                {
-                    case 2:
-                        return 8;
-                    case 1:
-                        return 12;
-                    case 0:
-                        return 13;
-                    default:
-                        break;
-                }
-            }
-
-            if(numbers == 1 && stars == 2)
-            {
-                return 11;
-            }
-
-            return 0;
+            return true;
         }
 
         private static bool IsSumInRange(int[] arr, int min, int max)

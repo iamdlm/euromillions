@@ -1,11 +1,9 @@
-﻿using EuroMillionsAI.Models;
-using EuromillionsCore.Interfaces;
+﻿using EuromillionsCore.Interfaces;
+using EuromillionsCore.Models;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
 
 namespace EuromillionsCore.Services
@@ -50,20 +48,22 @@ namespace EuromillionsCore.Services
 
         public void SaveFile(List<Draw> draws)
         {
-            string json = JsonSerializer.Serialize(draws.OrderByDescending(o => o.Date).ToList());
+            string json = JsonSerializer.Serialize(draws);
 
             File.WriteAllText(config.GetSection("FilePath").Value, json);
 
             Console.WriteLine("Past draws list saved.");
         }
 
-        public void UpdateFile(List<Draw> draws, Draw lastDraw)
+        public List<Draw> UpdateFile(List<Draw> draws, Draw lastDraw)
         {
             draws.Add(lastDraw);
 
             SaveFile(draws);
 
             Console.WriteLine("Past draws list updated.");
+
+            return draws;
         }
     }
 }
