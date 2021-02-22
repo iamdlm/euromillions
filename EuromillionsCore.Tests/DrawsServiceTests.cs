@@ -161,7 +161,7 @@ namespace EuromillionsCore.Tests
         [TestMethod]
         public void EvaluatePrize_HasPrize_True()
         {
-            var drawsService = new DrawsService();
+            var drawsService = new DrawsService(config);
 
             Draw drawnKey = new Draw
             {
@@ -282,6 +282,13 @@ namespace EuromillionsCore.Tests
                 Stars = new int[] { 1, 4 }
             };
 
+            Draw oneStar = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 20, 12, 17, 18, 19 },
+                Stars = new int[] { 2, 4 }
+            };
+
             Assert.AreEqual(1, drawsService.EvaluatePrize(drawnKey, firstPrize), "1st prize.");
             Assert.AreEqual(2, drawsService.EvaluatePrize(drawnKey, secondPrize), "2nd prize.");
             Assert.AreEqual(3, drawsService.EvaluatePrize(drawnKey, thirdPrize), "3rd prize.");
@@ -298,6 +305,7 @@ namespace EuromillionsCore.Tests
             Assert.AreEqual(0, drawsService.EvaluatePrize(drawnKey, noMatches), "No prize.");
             Assert.AreEqual(0, drawsService.EvaluatePrize(drawnKey, oneNumberOneStar), "No prize.");
             Assert.AreEqual(0, drawsService.EvaluatePrize(drawnKey, oneNumber), "No prize.");
+            Assert.AreEqual(0, drawsService.EvaluatePrize(drawnKey, oneStar), "No prize.");
         }
     }
 }

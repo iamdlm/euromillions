@@ -50,7 +50,7 @@ namespace EuromillionsCore.Services
             }
 
             return draws;
-        }        
+        }
 
         public bool IsDrawValid(Draw draw)
         {
@@ -103,7 +103,6 @@ namespace EuromillionsCore.Services
             return true;
         }
 
-
         private bool IsNotEqualPastDraws(Draw draw, List<Draw> previousDraws)
         {
             if (previousDraws.FirstOrDefault(d => d.Numbers.SequenceEqual(draw.Numbers) && d.Stars.SequenceEqual(draw.Stars)) != null)
@@ -154,6 +153,108 @@ namespace EuromillionsCore.Services
             }
 
             return seq;
+        }
+
+        public int EvaluatePrize(Draw draw, Draw prize)
+        {
+            int result = 0;
+
+            int numbers = draw.Numbers.Intersect(prize.Numbers).Count();
+            int stars = draw.Stars.Intersect(prize.Stars).Count();
+
+            if (numbers == 5)
+            {
+                if (stars == 2)
+                {
+                    return 1;
+                }
+
+                if (stars == 1)
+                {
+                    return 2;
+                }
+
+                if (stars == 0)
+                {
+                    return 3;
+                }
+            }
+
+            if (numbers == 4)
+            {
+                if (stars == 2)
+                {
+                    return 4;
+                }
+
+                if (stars == 1)
+                {
+                    return 5;
+                }
+            }
+
+            if (numbers == 3)
+            {
+                if (stars == 2)
+                {
+                    return 6;
+                }
+            }
+
+            if (numbers == 4)
+            {
+                if (stars == 0)
+                {
+                    return 7;
+                }
+            }
+
+            if (numbers == 2)
+            {
+                if (stars == 2)
+                {
+                    return 8;
+                }
+            }
+
+            if (numbers == 3)
+            {
+                if (stars == 1)
+                {
+                    return 9;
+                }
+
+                if (stars == 0)
+                {
+                    return 10;
+                }
+            }
+
+            if (numbers == 1)
+            {
+                if (stars == 2)
+                {
+                    return 11;
+                }
+            }
+
+            if (numbers == 2)
+            {
+                if (stars == 1)
+                {
+                    return 12;
+                }
+            }
+
+            if (numbers == 2)
+            {
+                if (stars == 0)
+                {
+                    return 13;
+                }
+            }
+
+            return result;
         }
     }
 }
