@@ -3,6 +3,7 @@ using EuromillionsCore.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace EuromillionsCore.Tests
@@ -23,6 +24,46 @@ namespace EuromillionsCore.Tests
                            .AddJsonFile($"appsettings.{environment}.json", optional: true)
                            .AddEnvironmentVariables()
                            .Build();
+        }
+
+        [TestMethod]
+        public void IsDrawValid_PreviousDraws_True()
+        {
+            var drawsService = new DrawsService(config);
+            var dataService = new DataService(config);
+
+            Draw draw = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 10, 11, 20, 21, 45 },
+                Stars = new int[] { 2, 3 }
+            };
+
+            List<Draw> previousDraws = dataService.ReadFile();
+
+            bool result = drawsService.IsDrawValid(draw, previousDraws);
+
+            Assert.IsTrue(result, "Draw was not previously drawn.");
+        }
+
+        [TestMethod]
+        public void IsDrawValid_PreviousDraws_False()
+        {
+            var drawsService = new DrawsService(config);
+            var dataService = new DataService(config);
+
+            Draw draw = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 18, 20, 35, 38, 48 },
+                Stars = new int[] { 9, 12 }
+            };
+
+            List<Draw> previousDraws = dataService.ReadFile();
+
+            bool result = drawsService.IsDrawValid(draw, previousDraws);
+
+            Assert.IsFalse(result, "Draw was previously drawn.");
         }
 
         [TestMethod]
@@ -261,6 +302,35 @@ namespace EuromillionsCore.Tests
                 Stars = new int[] { 1, 4 }
             };
 
+
+
+            Assert.AreEqual(1, drawsService.EvaluatePrize(drawnKey, firstPrize), "1st prize.");
+            Assert.AreEqual(2, drawsService.EvaluatePrize(drawnKey, secondPrize), "2nd prize.");
+            Assert.AreEqual(3, drawsService.EvaluatePrize(drawnKey, thirdPrize), "3rd prize.");
+            Assert.AreEqual(4, drawsService.EvaluatePrize(drawnKey, fourthPrize), "4th prize.");
+            Assert.AreEqual(5, drawsService.EvaluatePrize(drawnKey, fifthPrize), "5th prize.");
+            Assert.AreEqual(6, drawsService.EvaluatePrize(drawnKey, sixthPrize), "6th prize.");
+            Assert.AreEqual(7, drawsService.EvaluatePrize(drawnKey, seventhPrize), "7th prize.");
+            Assert.AreEqual(8, drawsService.EvaluatePrize(drawnKey, eighthPrize), "8th prize.");
+            Assert.AreEqual(9, drawsService.EvaluatePrize(drawnKey, ninthPrize), "9th prize.");
+            Assert.AreEqual(10, drawsService.EvaluatePrize(drawnKey, tenthPrize), "10th prize.");
+            Assert.AreEqual(11, drawsService.EvaluatePrize(drawnKey, eleventhPrize), "11th prize.");
+            Assert.AreEqual(12, drawsService.EvaluatePrize(drawnKey, twelfthPrize), "12th prize.");
+            Assert.AreEqual(13, drawsService.EvaluatePrize(drawnKey, thirteenthPrize), "13th prize.");
+        }
+
+        [TestMethod]
+        public void EvaluatePrize_HasPrize_False()
+        {
+            var drawsService = new DrawsService(config);
+
+            Draw drawnKey = new Draw
+            {
+                Date = DateTime.Now,
+                Numbers = new int[] { 21, 22, 23, 24, 25 },
+                Stars = new int[] { 2, 3 }
+            };
+
             Draw noMatches = new Draw
             {
                 Date = DateTime.Now,
@@ -289,19 +359,7 @@ namespace EuromillionsCore.Tests
                 Stars = new int[] { 2, 4 }
             };
 
-            Assert.AreEqual(1, drawsService.EvaluatePrize(drawnKey, firstPrize), "1st prize.");
-            Assert.AreEqual(2, drawsService.EvaluatePrize(drawnKey, secondPrize), "2nd prize.");
-            Assert.AreEqual(3, drawsService.EvaluatePrize(drawnKey, thirdPrize), "3rd prize.");
-            Assert.AreEqual(4, drawsService.EvaluatePrize(drawnKey, fourthPrize), "4th prize.");
-            Assert.AreEqual(5, drawsService.EvaluatePrize(drawnKey, fifthPrize), "5th prize.");
-            Assert.AreEqual(6, drawsService.EvaluatePrize(drawnKey, sixthPrize), "6th prize.");
-            Assert.AreEqual(7, drawsService.EvaluatePrize(drawnKey, seventhPrize), "7th prize.");
-            Assert.AreEqual(8, drawsService.EvaluatePrize(drawnKey, eighthPrize), "8th prize.");
-            Assert.AreEqual(9, drawsService.EvaluatePrize(drawnKey, ninthPrize), "9th prize.");
-            Assert.AreEqual(10, drawsService.EvaluatePrize(drawnKey, tenthPrize), "10th prize.");
-            Assert.AreEqual(11, drawsService.EvaluatePrize(drawnKey, eleventhPrize), "11th prize.");
-            Assert.AreEqual(12, drawsService.EvaluatePrize(drawnKey, twelfthPrize), "12th prize.");
-            Assert.AreEqual(13, drawsService.EvaluatePrize(drawnKey, thirteenthPrize), "13th prize.");
+
             Assert.AreEqual(0, drawsService.EvaluatePrize(drawnKey, noMatches), "No prize.");
             Assert.AreEqual(0, drawsService.EvaluatePrize(drawnKey, oneNumberOneStar), "No prize.");
             Assert.AreEqual(0, drawsService.EvaluatePrize(drawnKey, oneNumber), "No prize.");
