@@ -1,4 +1,4 @@
-﻿using EuromillionsCore.Models;
+﻿using EuromillionsCore.Entities;
 using System.Collections.Generic;
 
 namespace EuromillionsCore.Interfaces

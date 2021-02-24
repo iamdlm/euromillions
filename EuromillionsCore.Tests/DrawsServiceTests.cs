@@ -1,4 +1,4 @@
-using EuromillionsCore.Models;
+using EuromillionsCore.Entities;
 using EuromillionsCore.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

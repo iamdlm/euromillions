@@ -1,5 +1,5 @@
 ﻿using EuromillionsCore.Interfaces;
-using EuromillionsCore.Models;
+using EuromillionsCore.Entities;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;

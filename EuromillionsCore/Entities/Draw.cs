@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace EuromillionsCore.Models
+namespace EuromillionsCore.Entities
 {
     public class Draw
     {

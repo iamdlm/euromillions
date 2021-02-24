@@ -1,4 +1,4 @@
-﻿using EuromillionsCore.Models;
+﻿using EuromillionsCore.Entities;
 using EuromillionsCore.Interfaces;
 using System;
 using System.Collections.Generic;

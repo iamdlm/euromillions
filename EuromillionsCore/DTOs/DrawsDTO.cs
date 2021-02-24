@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EuromillionsCore.Models
+namespace EuromillionsCore.DTOs
 {
     public class DrawsDTO
     {
