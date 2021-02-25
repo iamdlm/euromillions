@@ -8,10 +8,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace EuromillionsCore.Services
 {
-    // Source: https://nunofcguerreiro.com/blog/euro-milhoes-api
     public class NunofcService : INunofcService
     {
         IConfiguration config;
@@ -51,17 +51,37 @@ namespace EuromillionsCore.Services
 
         private List<Draw> ConvertJsonToDraw(string json)
         {
+            List<Draw> draws = new List<Draw>();
+            List<DrawDTO> drawsDTO = new List<DrawDTO>();
+            
             DrawsDTO drawsAll = JsonSerializer.Deserialize<DrawsDTO>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            List<Draw> draws = new List<Draw>();
+            bool useAllDraws = true;
 
-            foreach (DrawDTO draw in drawsAll.Drawns.OrderByDescending(o => o.Date))
+            try
+            {
+                useAllDraws = Convert.ToBoolean(config.GetSection("UseAllDraws").Value);
+            }
+            catch { }
+
+            if (useAllDraws)
+            {
+                drawsDTO = drawsAll.Drawns.OrderByDescending(o => o.Date).ToList();
+            }
+            else
+            {
+                DateTime firstDraw = DateTime.Parse(config.GetSection("NewRulesFirstDrawDate").Value, new CultureInfo("en-US", true));
+
+                drawsDTO = drawsAll.Drawns.Where(x => x.Date >= firstDraw).OrderByDescending(o => o.Date).ToList();                
+            }
+            
+            foreach (DrawDTO drawDTO in drawsDTO)
             {
                 draws.Add(new Draw
                 {
-                    Date = draw.Date,
-                    Numbers = draw.Balls.Split(' ').Select(Int32.Parse).ToArray(),
-                    Stars = draw.Stars.Split(' ').Select(Int32.Parse).ToArray()
+                    Date = drawDTO.Date,
+                    Numbers = drawDTO.Balls.Split(' ').Select(Int32.Parse).ToArray(),
+                    Stars = drawDTO.Stars.Split(' ').Select(Int32.Parse).ToArray()
                 });
             }
 
