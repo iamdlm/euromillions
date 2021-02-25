@@ -5,3 +5,4 @@
 
 ## To do
 - [ ] Strongly-typed configuration
+- [ ] Track generated keys results
