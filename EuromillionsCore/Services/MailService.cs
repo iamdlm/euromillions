@@ -19,7 +19,6 @@ namespace EuromillionsCore.Services
             this.config = _config;
         }
 
-
         public void Send(List<Draw> draws)
         {
             var smtpClient = new SmtpClient(config.GetSection("SmtpConfiguration:Host").Value)

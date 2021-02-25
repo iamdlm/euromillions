@@ -35,7 +35,7 @@ namespace EuromillionsCore.Tests
             Draw draw = new Draw
             {
                 Date = DateTime.Now,
-                Numbers = new int[] { 10, 11, 20, 21, 45 },
+                Numbers = new int[] { 10, 11, 20, 31, 45 },
                 Stars = new int[] { 2, 3 }
             };
 
@@ -74,7 +74,7 @@ namespace EuromillionsCore.Tests
             Draw draw = new Draw
             {
                 Date = DateTime.Now,
-                Numbers = new int[] { 4, 10, 20, 23, 45 },
+                Numbers = new int[] { 4, 10, 20, 33, 45 },
                 Stars = new int[] { 2, 3 }
             };
 
@@ -173,7 +173,7 @@ namespace EuromillionsCore.Tests
             Draw draw = new Draw
             {
                 Date = DateTime.Now,
-                Numbers = new int[] { 4, 10, 20, 23, 45 },
+                Numbers = new int[] { 4, 10, 20, 33, 45 },
                 Stars = new int[] { 2, 3 }
             };
 
@@ -190,7 +190,7 @@ namespace EuromillionsCore.Tests
             Draw draw = new Draw
             {
                 Date = DateTime.Now,
-                Numbers = new int[] { 21, 22, 23, 24, 25 },
+                Numbers = new int[] { 23, 24, 25, 26, 27 },
                 Stars = new int[] { 2, 3 }
             };
 
