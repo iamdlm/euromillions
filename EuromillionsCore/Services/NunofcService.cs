@@ -51,31 +51,13 @@ namespace EuromillionsCore.Services
 
         private List<Draw> ConvertJsonToDraw(string json)
         {
+            DrawsDTO drawsDTO = JsonSerializer.Deserialize<DrawsDTO>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            DateTime firstDraw = DateTime.Parse(config.GetSection("FirstDrawDate").Value, new CultureInfo("en-US", true));
+
             List<Draw> draws = new List<Draw>();
-            List<DrawDTO> drawsDTO = new List<DrawDTO>();
-            
-            DrawsDTO drawsAll = JsonSerializer.Deserialize<DrawsDTO>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            bool useAllDraws = true;
-
-            try
-            {
-                useAllDraws = Convert.ToBoolean(config.GetSection("UseAllDraws").Value);
-            }
-            catch { }
-
-            if (useAllDraws)
-            {
-                drawsDTO = drawsAll.Drawns.OrderByDescending(o => o.Date).ToList();
-            }
-            else
-            {
-                DateTime firstDraw = DateTime.Parse(config.GetSection("NewRulesFirstDrawDate").Value, new CultureInfo("en-US", true));
-
-                drawsDTO = drawsAll.Drawns.Where(x => x.Date >= firstDraw).OrderByDescending(o => o.Date).ToList();                
-            }
-            
-            foreach (DrawDTO drawDTO in drawsDTO)
+            foreach (DrawDTO drawDTO in drawsDTO.Drawns.Where(x => x.Date >= firstDraw).OrderByDescending(o => o.Date).ToList())
             {
                 draws.Add(new Draw
                 {
