@@ -12,5 +12,7 @@ namespace EuromillionsCore.Interfaces
         bool IsDrawValid(Draw draw);
 
         bool IsDrawValid(Draw draw, List<Draw> previousDraws);
+
+        int EvaluatePrize(Draw draw, Draw prize);
     }
 }

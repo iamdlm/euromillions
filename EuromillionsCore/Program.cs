@@ -17,7 +17,7 @@ namespace EuromillionsCore
             var startup = new Startup();
 
             // Request services instances from the service pipeline
-            
+
             IDataService dataService = startup.Provider.GetRequiredService<IDataService>();
             INunofcService nunofcService = startup.Provider.GetRequiredService<INunofcService>();
             IDrawsService drawsService = startup.Provider.GetRequiredService<IDrawsService>();
@@ -25,19 +25,19 @@ namespace EuromillionsCore
 
             // List of past draws
 
-            List<Draw> draws = new List<Draw>();
+            List<Draw> previousDraws = new List<Draw>();
 
             // Get past draws from file
 
-            draws = dataService.ReadFile();
+            previousDraws = dataService.ReadFile();
 
-            if (draws == null)
+            if (previousDraws == null)
             {
                 // Get past draws from API 
 
-                draws = await nunofcService.GetAllAsync();
+                previousDraws = await nunofcService.GetAllAsync();
 
-                if (draws == null)
+                if (previousDraws == null)
                 {
                     Console.WriteLine("Failed to get all draws.");
 
@@ -46,7 +46,7 @@ namespace EuromillionsCore
 
                 // Save past draws to file
 
-                dataService.SaveFile(draws);
+                dataService.SaveFile(previousDraws);
             }
             else
             {
@@ -56,7 +56,7 @@ namespace EuromillionsCore
 
                 // Get last draw from past draws list
 
-                Draw lastPastDraw = draws.OrderByDescending(o => o.Date).FirstOrDefault();
+                Draw lastPastDraw = previousDraws.OrderByDescending(o => o.Date).FirstOrDefault();
 
                 if (lastDraw.Date == lastPastDraw.Date)
                 {
@@ -66,11 +66,11 @@ namespace EuromillionsCore
                 {
                     // Update past draws list with last draw
 
-                    draws = dataService.UpdateFile(draws, lastDraw);
+                    previousDraws = dataService.UpdateFile(previousDraws, lastDraw);
                 }
             }
 
-            List<Draw> genDraws = drawsService.Generate(draws);
+            List<Draw> genDraws = drawsService.Generate(previousDraws);
 
             Console.WriteLine("New keys generated.");
 

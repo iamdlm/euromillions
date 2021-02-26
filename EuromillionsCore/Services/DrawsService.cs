@@ -61,6 +61,13 @@ namespace EuromillionsCore.Services
         {
             if (previousDraws != null)
             {
+                // Remove draws with previous big prizes
+
+                if (!IsPointsInRange(draw, previousDraws))
+                {
+                    return false;
+                }
+                    
                 // Remove draws already drawn
 
                 if (!IsNotEqualPastDraws(draw, previousDraws))
@@ -179,8 +186,7 @@ namespace EuromillionsCore.Services
             return result;
         }
 
-
-        public int CalculateTotalPoints(Draw draw, Draw prize)
+        public static int EvaluatePoints(Draw draw, Draw prize)
         {
             int result = 0;
 
@@ -313,6 +319,47 @@ namespace EuromillionsCore.Services
             }
 
             return true;
+        }
+
+        private bool IsPointsInRange(Draw draw, List<Draw> previousDraws)
+        {
+            List<int> previousDrawsPoints = CalculatePreviousDrawsPoints(previousDraws);
+
+            int previousDrawsPointsAvg = Convert.ToInt32(previousDrawsPoints.Average());
+            int previousDrawsPointsStd = MathExtensions.StandardDeviation(previousDrawsPoints, previousDrawsPointsAvg);
+
+            int drawPointsAvg = CalculateDrawPoints(draw, previousDraws);
+
+            return drawPointsAvg >= MathExtensions.LowerLimit(previousDrawsPointsAvg, previousDrawsPointsStd) && 
+                drawPointsAvg <= MathExtensions.UpperLimit(previousDrawsPointsAvg, previousDrawsPointsStd);
+        }
+
+        private static List<int> CalculatePreviousDrawsPoints(List<Draw> previousDraws)
+        {
+            List<int> points = new List<int>();
+
+            for (int i = 0; i < previousDraws.Count; i++)
+            {
+                if (i == 0) { continue; }
+
+                List<Draw> drawsBefore = previousDraws.Where(w => w.Date < previousDraws[i].Date).ToList();
+
+                points.Add(CalculateDrawPoints(previousDraws[i], drawsBefore));
+            }
+
+            return points;
+        }
+
+        private static int CalculateDrawPoints(Draw draw, List<Draw> previousDraws)
+        {
+            int points = 0;
+
+            foreach (Draw previousDraw in previousDraws)
+            {
+                points += EvaluatePoints(draw, previousDraw);
+            }
+
+            return points;
         }
 
         private bool IsNotEqualPastDraws(Draw draw, List<Draw> previousDraws)
