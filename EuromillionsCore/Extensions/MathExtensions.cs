@@ -23,6 +23,13 @@ namespace EuromillionsCore.Extensions
             return Convert.ToInt32(stdDev);
         }
 
+        public static int StandardDeviation(List<int> list, int average)
+        {
+            double stdDev = Math.Sqrt(list.Average(v => Math.Pow(v - average, 2)));
+
+            return Convert.ToInt32(stdDev);
+        }
+
         public static int LowerLimit(int average, int stdDev)
         {
             return average - stdDev;
