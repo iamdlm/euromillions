@@ -44,7 +44,10 @@ namespace EuromillionsCore.Services
             {
                 Draw draw = new Draw();
 
-                IsDrawValid(draw, previousDraws);
+                while (!IsDrawValid(draw, previousDraws))
+                {
+                    draw = new Draw();
+                }
 
                 draws.Add(draw);
             }
