@@ -52,6 +52,8 @@ namespace EuromillionsCore.Services
                 draws.Add(draw);
             }
 
+            Console.WriteLine("New keys generated.");
+
             return draws;
         }
 
