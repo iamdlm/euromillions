@@ -4,6 +4,10 @@
 - [Console app with configuration, dependency injection and logging](https://emanuelpaul.net/2019/06/03/console-app-with-configuration-dependency-injection-and-logging/)
 - [Adding Dependency Injection to .NET Core Console Applications on Windows](https://dev.to/ballcapz/adding-dependency-injection-to-net-core-console-applications-on-windows-3pm0)
 
+## Usage
+1. Add smtp settings to appsettings.json
+2. Schedule task with Windows Task Scheduler (eg: Run every Tuesday and Friday at 10 am)
+
 ## To do
 - [ ] Strongly-typed configuration
 - [ ] Track generated keys results
