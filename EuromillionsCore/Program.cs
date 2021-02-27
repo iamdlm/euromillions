@@ -29,24 +29,11 @@ namespace EuromillionsCore
 
             // Get past draws from file
 
-            previousDraws = dataService.ReadFile();
+            previousDraws = dataService.ReadFile(Entities.Type.Drawn);
 
             if (previousDraws == null)
             {
-                // Get past draws from API 
-
-                previousDraws = await nunofcService.GetAllAsync();
-
-                if (previousDraws == null)
-                {
-                    Console.WriteLine("Failed to get all draws.");
-
-                    return;
-                }
-
-                // Save past draws to file
-
-                dataService.SaveFile(previousDraws);
+                await GetAllAndSaveAsync(nunofcService, dataService);
             }
             else
             {
@@ -56,27 +43,113 @@ namespace EuromillionsCore
 
                 // Get last draw from past draws list
 
-                Draw lastPastDraw = previousDraws.OrderByDescending(o => o.Date).FirstOrDefault();
+                Draw lastDrawSaved = previousDraws.OrderByDescending(o => o.Date).FirstOrDefault();
 
-                if (lastDraw.Date == lastPastDraw.Date)
+                if (lastDraw.Date == lastDrawSaved.Date)
                 {
                     Console.WriteLine("Past draws list already updated.");
                 }
                 else
                 {
-                    // Update past draws list with last draw
+                    // Days difference between today and last draw in file
 
-                    previousDraws = dataService.UpdateFile(previousDraws, lastDraw);
+                    TimeSpan daysDif = lastDraw.Date - lastDrawSaved.Date;
+
+                    // Get all draws if last draw saved was more than 3 or 4 days ago (Friday or Tuesday respectively)
+
+                    if (lastDraw.Date.DayOfWeek == DayOfWeek.Friday && daysDif.Days > 3 ||
+                        lastDraw.Date.DayOfWeek == DayOfWeek.Tuesday && daysDif.Days > 4)
+                    {
+                        previousDraws = await GetAllAndSaveAsync(nunofcService, dataService);
+                    }
+                    else
+                    {
+                        // Update past draws list with last draw
+
+                        previousDraws = dataService.UpdateFile(previousDraws, lastDraw, Entities.Type.Drawn);
+                    }
                 }
             }
 
-            List<Draw> genDraws = drawsService.Generate(previousDraws);
+            // Generate number of keys according to appsettings
 
-            Console.WriteLine("New keys generated.");
+            List<Draw> generatedDraws = drawsService.Generate(previousDraws);
 
-            mailService.Send(genDraws);
+            // Get previous generated draws
 
-            Console.WriteLine("New keys sent by email.");
+            List<Draw> previousGeneratedDraws = dataService.ReadFile(Entities.Type.Generated);
+
+            if (previousGeneratedDraws != null && previousGeneratedDraws.Any())
+            {
+                List<Draw> stillValidGeneratedDraws = new List<Draw>();
+
+                // Get last generated draw date
+
+                Draw previousGeneratedLastDraw = previousGeneratedDraws.OrderByDescending(o => o.Date).ToList().FirstOrDefault();
+
+                // Get last generated draws by date of last generated draw
+
+                List<Draw> previousGeneratedDrawsByDate = previousGeneratedDraws.Where(w => w.Date == previousGeneratedLastDraw.Date).ToList();
+
+                foreach (Draw draw in previousGeneratedDrawsByDate)
+                {
+                    // Add draw to temp generated list if valid
+
+                    if (drawsService.IsDrawValid(draw, previousDraws))
+                    {
+                        stillValidGeneratedDraws.Add(draw);
+                    }
+                }
+
+                if (stillValidGeneratedDraws.Any())
+                {
+                    // Replace generated draws with previous generated draws that are still valid
+
+                    int missingDraws = generatedDraws.Count() - stillValidGeneratedDraws.Count();
+
+                    if (missingDraws > 0)
+                    {
+                        Random random = new Random();
+
+                        for (int i = 0; i < missingDraws; i++)
+                        {
+                            int index = random.Next(missingDraws);
+
+                            stillValidGeneratedDraws.Add(generatedDraws[index]);
+                        }
+                    }
+
+                    generatedDraws = stillValidGeneratedDraws;
+                }
+            }
+
+            // Send keys by email
+
+            // mailService.Send(generatedDraws);
+
+            // Save generated keys to file
+
+            dataService.SaveFile(generatedDraws, Entities.Type.Generated);
+        }
+
+        private static async Task<List<Draw>> GetAllAndSaveAsync(INunofcService nunofcService, IDataService dataService)
+        {
+            // Get past draws from API
+
+            List<Draw> draws = await nunofcService.GetAllAsync();
+
+            if (draws == null)
+            {
+                Console.WriteLine("Failed to get all draws.");
+
+                return draws;
+            }
+
+            // Save past draws to file
+
+            dataService.SaveFile(draws, Entities.Type.Drawn);
+
+            return draws;
         }
     }
 }
