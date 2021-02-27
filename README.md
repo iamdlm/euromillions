@@ -6,7 +6,7 @@
 
 ## Usage
 1. Add smtp settings to appsettings.json
-2. Schedule task with Windows Task Scheduler (eg: Run every Tuesday and Friday at 10 am)
+2. Schedule task with Windows Task Scheduler (eg: Run every Tuesday and Friday at 10 am) or Azure Webjob
 
 ## How it works
 - Removes keys with previous big prizes won (usually 5th or better)
