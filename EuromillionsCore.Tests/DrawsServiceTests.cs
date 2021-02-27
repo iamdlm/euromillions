@@ -39,7 +39,7 @@ namespace EuromillionsCore.Tests
                 Stars = new int[] { 2, 3 }
             };
 
-            List<Draw> previousDraws = dataService.ReadFile();
+            List<Draw> previousDraws = dataService.ReadFile(Entities.Type.Drawn);
 
             bool result = drawsService.IsDrawValid(draw, previousDraws);
 
@@ -59,7 +59,7 @@ namespace EuromillionsCore.Tests
                 Stars = new int[] { 9, 12 }
             };
 
-            List<Draw> previousDraws = dataService.ReadFile();
+            List<Draw> previousDraws = dataService.ReadFile(Entities.Type.Drawn);
 
             bool result = drawsService.IsDrawValid(draw, previousDraws);
 

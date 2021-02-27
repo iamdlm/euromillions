@@ -316,7 +316,7 @@ namespace EuromillionsCore.Services
                 return false;
             }
 
-            // Removed sequential keys
+            // Remove sequential keys
 
             if (CountSequentialNumbers(draw.Numbers) == draw.Numbers.Length - 1)
             {
