@@ -25,7 +25,7 @@ namespace EuromillionsCore.Services
             return Generate(null);
         }
 
-        public List<Draw> Generate(List<Draw> previousDraws)
+        public List<Draw> Generate(List<Draw> pastDraws)
         {
             int keys = 1;
 
@@ -44,7 +44,7 @@ namespace EuromillionsCore.Services
             {
                 Draw draw = new Draw();
 
-                while (!IsDrawValid(draw, previousDraws))
+                while (!IsDrawValid(draw, pastDraws))
                 {
                     draw = new Draw();
                 }
@@ -62,26 +62,26 @@ namespace EuromillionsCore.Services
             return IsDrawValid(draw, null);
         }
 
-        public bool IsDrawValid(Draw draw, List<Draw> previousDraws)
+        public bool IsDrawValid(Draw draw, List<Draw> pastDraws)
         {
-            if (previousDraws != null)
+            if (pastDraws != null)
             {
-                // Remove draws with previous big prizes
+                // Remove draws with past big prizes
 
-                if (!IsPointsInRange(draw, previousDraws))
+                if (!IsPointsInRange(draw, pastDraws))
                 {
                     return false;
                 }
                     
                 // Remove draws already drawn
 
-                if (!IsNotEqualPastDraws(draw, previousDraws))
+                if (!IsNotEqualPastDraws(draw, pastDraws))
                 {
                     return false;
                 }
 
-                int average = MathExtensions.Average(previousDraws);
-                int stdDev = MathExtensions.StandardDeviation(previousDraws, average);
+                int average = MathExtensions.Average(pastDraws);
+                int stdDev = MathExtensions.StandardDeviation(pastDraws, average);
 
                 return IsDrawValid(draw, MathExtensions.LowerLimit(average, stdDev), MathExtensions.UpperLimit(average, stdDev));
             }
@@ -326,50 +326,50 @@ namespace EuromillionsCore.Services
             return true;
         }
 
-        private bool IsPointsInRange(Draw draw, List<Draw> previousDraws)
+        private bool IsPointsInRange(Draw draw, List<Draw> pastDraws)
         {
-            List<int> previousDrawsPoints = CalculatePreviousDrawsPoints(previousDraws);
+            List<int> pastDrawsPoints = CalculatePastDrawsPoints(pastDraws);
 
-            int previousDrawsPointsAvg = Convert.ToInt32(previousDrawsPoints.Average());
-            int previousDrawsPointsStd = MathExtensions.StandardDeviation(previousDrawsPoints, previousDrawsPointsAvg);
+            int pastDrawsPointsAvg = Convert.ToInt32(pastDrawsPoints.Average());
+            int pastDrawsPointsStd = MathExtensions.StandardDeviation(pastDrawsPoints, pastDrawsPointsAvg);
 
-            int drawPointsAvg = CalculateDrawPoints(draw, previousDraws);
+            int drawPointsAvg = CalculateDrawPoints(draw, pastDraws);
 
-            return drawPointsAvg >= MathExtensions.LowerLimit(previousDrawsPointsAvg, previousDrawsPointsStd) && 
-                drawPointsAvg <= MathExtensions.UpperLimit(previousDrawsPointsAvg, previousDrawsPointsStd);
+            return drawPointsAvg >= MathExtensions.LowerLimit(pastDrawsPointsAvg, pastDrawsPointsStd) && 
+                drawPointsAvg <= MathExtensions.UpperLimit(pastDrawsPointsAvg, pastDrawsPointsStd);
         }
 
-        private static List<int> CalculatePreviousDrawsPoints(List<Draw> previousDraws)
+        private static List<int> CalculatePastDrawsPoints(List<Draw> pastDraws)
         {
             List<int> points = new List<int>();
 
-            for (int i = 0; i < previousDraws.Count; i++)
+            for (int i = 0; i < pastDraws.Count; i++)
             {
                 if (i == 0) { continue; }
 
-                List<Draw> drawsBefore = previousDraws.Where(w => w.Date < previousDraws[i].Date).ToList();
+                List<Draw> drawsBefore = pastDraws.Where(w => w.Date < pastDraws[i].Date).ToList();
 
-                points.Add(CalculateDrawPoints(previousDraws[i], drawsBefore));
+                points.Add(CalculateDrawPoints(pastDraws[i], drawsBefore));
             }
 
             return points;
         }
 
-        private static int CalculateDrawPoints(Draw draw, List<Draw> previousDraws)
+        private static int CalculateDrawPoints(Draw draw, List<Draw> pastDraws)
         {
             int points = 0;
 
-            foreach (Draw previousDraw in previousDraws)
+            foreach (Draw pastDraw in pastDraws)
             {
-                points += EvaluatePoints(draw, previousDraw);
+                points += EvaluatePoints(draw, pastDraw);
             }
 
             return points;
         }
 
-        private bool IsNotEqualPastDraws(Draw draw, List<Draw> previousDraws)
+        private bool IsNotEqualPastDraws(Draw draw, List<Draw> pastDraws)
         {
-            if (previousDraws.FirstOrDefault(d => d.Numbers.SequenceEqual(draw.Numbers) && d.Stars.SequenceEqual(draw.Stars)) != null)
+            if (pastDraws.FirstOrDefault(d => d.Numbers.SequenceEqual(draw.Numbers) && d.Stars.SequenceEqual(draw.Stars)) != null)
             {
                 return false;
             }

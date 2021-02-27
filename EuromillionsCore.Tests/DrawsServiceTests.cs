@@ -27,7 +27,7 @@ namespace EuromillionsCore.Tests
         }
 
         [TestMethod]
-        public void IsDrawValid_PreviousDraws_True()
+        public void IsDrawValid_PastDraws_True()
         {
             var drawsService = new DrawsService(config);
             var dataService = new DataService(config);
@@ -39,15 +39,15 @@ namespace EuromillionsCore.Tests
                 Stars = new int[] { 2, 3 }
             };
 
-            List<Draw> previousDraws = dataService.ReadFile(Entities.Type.Drawn);
+            List<Draw> pastDraws = dataService.ReadFile(Entities.Type.Drawn);
 
-            bool result = drawsService.IsDrawValid(draw, previousDraws);
+            bool result = drawsService.IsDrawValid(draw, pastDraws);
 
             Assert.IsTrue(result, "Draw was not previously drawn.");
         }
 
         [TestMethod]
-        public void IsDrawValid_PreviousDraws_False()
+        public void IsDrawValid_PastDraws_False()
         {
             var drawsService = new DrawsService(config);
             var dataService = new DataService(config);
@@ -59,9 +59,9 @@ namespace EuromillionsCore.Tests
                 Stars = new int[] { 9, 12 }
             };
 
-            List<Draw> previousDraws = dataService.ReadFile(Entities.Type.Drawn);
+            List<Draw> pastDraws = dataService.ReadFile(Entities.Type.Drawn);
 
-            bool result = drawsService.IsDrawValid(draw, previousDraws);
+            bool result = drawsService.IsDrawValid(draw, pastDraws);
 
             Assert.IsFalse(result, "Draw was previously drawn.");
         }

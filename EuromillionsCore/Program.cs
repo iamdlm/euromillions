@@ -25,13 +25,13 @@ namespace EuromillionsCore
 
             // List of past draws
 
-            List<Draw> previousDraws = new List<Draw>();
+            List<Draw> pastDraws = new List<Draw>();
 
             // Get past draws from file
 
-            previousDraws = dataService.ReadFile(Entities.Type.Drawn);
+            pastDraws = dataService.ReadFile(Entities.Type.Drawn);
 
-            if (previousDraws == null)
+            if (pastDraws == null)
             {
                 await GetAllAndSaveAsync(nunofcService, dataService);
             }
@@ -43,7 +43,7 @@ namespace EuromillionsCore
 
                 // Get last draw from past draws list
 
-                Draw lastDrawSaved = previousDraws.OrderByDescending(o => o.Date).FirstOrDefault();
+                Draw lastDrawSaved = pastDraws.OrderByDescending(o => o.Date).FirstOrDefault();
 
                 if (lastDraw.Date == lastDrawSaved.Date)
                 {
@@ -60,42 +60,38 @@ namespace EuromillionsCore
                     if (lastDraw.Date.DayOfWeek == DayOfWeek.Friday && daysDif.Days > 3 ||
                         lastDraw.Date.DayOfWeek == DayOfWeek.Tuesday && daysDif.Days > 4)
                     {
-                        previousDraws = await GetAllAndSaveAsync(nunofcService, dataService);
+                        pastDraws = await GetAllAndSaveAsync(nunofcService, dataService);
                     }
                     else
                     {
                         // Update past draws list with last draw
 
-                        previousDraws = dataService.UpdateFile(previousDraws, lastDraw, Entities.Type.Drawn);
+                        pastDraws = dataService.UpdateFile(pastDraws, lastDraw, Entities.Type.Drawn);
                     }
                 }
             }
 
             // Generate number of keys according to appsettings
 
-            List<Draw> generatedDraws = drawsService.Generate(previousDraws);
+            List<Draw> newDraws = drawsService.Generate(pastDraws);
 
-            // Get previous generated draws
+            // Get past generated draws
 
-            List<Draw> previousGeneratedDraws = dataService.ReadFile(Entities.Type.Generated);
+            List<Draw> pastGeneratedDraws = dataService.ReadFile(Entities.Type.Generated);
 
-            if (previousGeneratedDraws != null && previousGeneratedDraws.Any())
+            if (pastGeneratedDraws != null && pastGeneratedDraws.Any())
             {
                 List<Draw> stillValidGeneratedDraws = new List<Draw>();
 
-                // Get last generated draw date
+                // Get last generated draw
 
-                Draw previousGeneratedLastDraw = previousGeneratedDraws.OrderByDescending(o => o.Date).ToList().FirstOrDefault();
+                Draw lastGeneratedDraw = pastGeneratedDraws.OrderByDescending(o => o.Date).ToList().FirstOrDefault();
 
-                // Get last generated draws by date of last generated draw
-
-                List<Draw> previousGeneratedDrawsByDate = previousGeneratedDraws.Where(w => w.Date == previousGeneratedLastDraw.Date).ToList();
-
-                foreach (Draw draw in previousGeneratedDrawsByDate)
+                foreach (Draw draw in pastGeneratedDraws.Where(w => w.Date == lastGeneratedDraw.Date).ToList())
                 {
                     // Add draw to temp generated list if valid
 
-                    if (drawsService.IsDrawValid(draw, previousDraws))
+                    if (drawsService.IsDrawValid(draw, pastDraws))
                     {
                         stillValidGeneratedDraws.Add(draw);
                     }
@@ -103,9 +99,9 @@ namespace EuromillionsCore
 
                 if (stillValidGeneratedDraws.Any())
                 {
-                    // Replace generated draws with previous generated draws that are still valid
+                    // Replace new draws with past generated draws that are still valid
 
-                    int missingDraws = generatedDraws.Count() - stillValidGeneratedDraws.Count();
+                    int missingDraws = newDraws.Count() - stillValidGeneratedDraws.Count();
 
                     if (missingDraws > 0)
                     {
@@ -115,21 +111,21 @@ namespace EuromillionsCore
                         {
                             int index = random.Next(missingDraws);
 
-                            stillValidGeneratedDraws.Add(generatedDraws[index]);
+                            stillValidGeneratedDraws.Add(newDraws[index]);
                         }
                     }
 
-                    generatedDraws = stillValidGeneratedDraws;
+                    newDraws = stillValidGeneratedDraws;
                 }
             }
 
             // Send keys by email
 
-            // mailService.Send(generatedDraws);
+            mailService.Send(newDraws);
 
             // Save generated keys to file
 
-            dataService.SaveFile(generatedDraws, Entities.Type.Generated);
+            dataService.SaveFile(newDraws, Entities.Type.Generated);
         }
 
         private static async Task<List<Draw>> GetAllAndSaveAsync(INunofcService nunofcService, IDataService dataService)
