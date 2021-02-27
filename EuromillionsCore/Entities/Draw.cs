@@ -15,7 +15,9 @@ namespace EuromillionsCore.Entities
         {
             this.Numbers = GetSortedArray(50, 5);
             this.Stars = GetSortedArray(12, 2);
-            this.Date = DateTime.Now;
+
+            DateTime today = DateTime.Now;
+            this.Date = new DateTime(today.Year,today.Month, today.Day);
         }
 
         private static int[] GetSortedArray(int length, int numbers)
