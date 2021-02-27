@@ -21,18 +21,27 @@ namespace EuromillionsCore.Services
             Directory.CreateDirectory(config.GetSection("FolderPath").Value);
         }
 
-        public List<Draw> ReadFile()
+        public List<Draw> ReadFile(Entities.Type type)
         {
-            string json = string.Empty;
+            string path = string.Empty;
 
-            if (!File.Exists(config.GetSection("FilePath").Value))
+            if (type == Entities.Type.Drawn)
+            {
+                path = config.GetSection("FilePathDrawn").Value;
+            }
+            else if(type == Entities.Type.Generated)
+            {
+                path = config.GetSection("FilePathGenerated").Value;
+            }
+
+            if (!File.Exists(path))
             {
                 Console.WriteLine("File doesn't exist.");
 
                 return null;
             }
 
-            json = File.ReadAllText(config.GetSection("FilePath").Value);
+            string json = File.ReadAllText(path);
 
             if (string.IsNullOrEmpty(json))
             {
@@ -46,20 +55,27 @@ namespace EuromillionsCore.Services
             return draws;
         }
 
-        public void SaveFile(List<Draw> draws)
+        public void SaveFile(List<Draw> draws, Entities.Type type)
         {
             string json = JsonSerializer.Serialize(draws);
 
-            File.WriteAllText(config.GetSection("FilePath").Value, json);
+            if (type == Entities.Type.Drawn)
+            {
+                File.WriteAllText(config.GetSection("FilePathDrawn").Value, json);
+            }
+            else if (type == Entities.Type.Generated)
+            {
+                File.WriteAllText(config.GetSection("FilePathGenerated").Value, json);
+            }
 
             Console.WriteLine("Past draws list saved.");
         }
 
-        public List<Draw> UpdateFile(List<Draw> draws, Draw lastDraw)
+        public List<Draw> UpdateFile(List<Draw> draws, Draw lastDraw, Entities.Type type)
         {
             draws.Add(lastDraw);
 
-            SaveFile(draws);
+            SaveFile(draws, type);
 
             Console.WriteLine("Past draws list updated.");
 
