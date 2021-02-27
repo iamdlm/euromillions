@@ -41,6 +41,8 @@ namespace EuromillionsCore.Services
             mailMessage.To.Add(config.GetSection("SmtpConfiguration:Username").Value);
 
             smtpClient.Send(mailMessage);
+
+            Console.WriteLine("New keys sent by email.");
         }
 
         private static string GenerateBody(List<Draw> draws)
