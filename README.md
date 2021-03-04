@@ -19,4 +19,4 @@
 ## To do
 - [ ] Strongly-typed configuration
 - [ ] Track generated keys results
-- [ ] Add more and refactor tests
+- [ ] Add/refactor tests
