@@ -66,14 +66,14 @@ namespace EuromillionsCore.Services
         {
             if (pastDraws != null)
             {
-                // Remove draws with past big prizes
+                // Ignore draws with past big prizes
 
                 if (!IsPointsInRange(draw, pastDraws))
                 {
                     return false;
                 }
                     
-                // Remove draws already drawn
+                // Ignore draws already drawn
 
                 if (!IsNotEqualPastDraws(draw, pastDraws))
                 {
@@ -295,28 +295,28 @@ namespace EuromillionsCore.Services
 
         private bool IsDrawValid(Draw draw, int min, int max)
         {
-            // Remove all draws outside of range [min, max]
+            // Ignore all draws outside of range [min, max]
 
             if (!IsSumInRange(draw.Numbers, min, max))
             {
                 return false;
             }
 
-            // Remove all patterns different from 3-odd-2-even or 3-even-2-odd
+            // Ignore all patterns different from 3-odd-2-even or 3-even-2-odd
 
             if (!IsEvenNumbersCountInRange(draw.Numbers, 2, 3))
             {
                 return false;
             }
 
-            // Remove all patterns different from 3-low-2-high or 2-low-3-high
+            // Ignore all patterns different from 3-low-2-high or 2-low-3-high
 
             if (!IsLowNumbersCountInRange(draw.Numbers, 2, 3))
             {
                 return false;
             }
 
-            // Remove sequential keys
+            // Ignore sequential keys
 
             if (CountSequentialNumbers(draw.Numbers) == draw.Numbers.Length - 1)
             {
