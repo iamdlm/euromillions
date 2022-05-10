@@ -59,11 +59,14 @@ namespace EuromillionsCore.Services
 
             foreach (DrawDTO drawDTO in drawsDTO.Drawns.Where(x => x.Date >= firstDraw).OrderByDescending(o => o.Date).ToList())
             {
+                int[] balls = { int.Parse(drawDTO.Ball_1), int.Parse(drawDTO.Ball_2), int.Parse(drawDTO.Ball_3), int.Parse(drawDTO.Ball_4), int.Parse(drawDTO.Ball_5) };
+                int[] stars = { int.Parse(drawDTO.Star_1), int.Parse(drawDTO.Star_2) };
+
                 draws.Add(new Draw
                 {
                     Date = drawDTO.Date,
-                    Numbers = drawDTO.Balls.Split(' ').Select(Int32.Parse).ToArray(),
-                    Stars = drawDTO.Stars.Split(' ').Select(Int32.Parse).ToArray()
+                    Numbers = balls,
+                    Stars = stars
                 });
             }
 
