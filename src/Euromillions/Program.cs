@@ -119,13 +119,13 @@ namespace Euromillions
                 }
             }
 
-            // Send keys by email
-
-            mailService.Send(newDraws);
-
             // Save generated keys to file
 
             dataService.SaveFile(newDraws, Entities.Type.Generated);
+
+            // Send keys by email
+
+            mailService.Send(newDraws);
         }
 
         private static async Task<List<Draw>> GetAllAndSaveAsync(INunofcService nunofcService, IDataService dataService)
