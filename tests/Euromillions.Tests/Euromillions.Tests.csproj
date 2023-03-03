@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EuromillionsCore\EuromillionsCore.csproj" />
+    <ProjectReference Include="..\..\src\Euromillions\Euromillions.csproj" />
   </ItemGroup>
 
 </Project>
