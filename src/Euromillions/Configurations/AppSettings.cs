@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EuromillionsCore.Configurations
+namespace Euromillions.Configurations
 {
     class AppSettings
     {

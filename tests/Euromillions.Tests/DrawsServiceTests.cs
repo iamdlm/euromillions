@@ -1,12 +1,12 @@
-using EuromillionsCore.Entities;
-using EuromillionsCore.Services;
+using Euromillions.Entities;
+using Euromillions.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace EuromillionsCore.Tests
+namespace Euromillions.Tests
 {
     [TestClass]
     public class DrawsServiceTests

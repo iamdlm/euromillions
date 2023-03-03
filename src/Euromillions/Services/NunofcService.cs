@@ -1,7 +1,7 @@
-﻿using EuromillionsCore.DTOs;
-using EuromillionsCore.Interfaces;
-using EuromillionsCore.Entities;
-using EuromillionsCore.Services;
+﻿using Euromillions.DTOs;
+using Euromillions.Interfaces;
+using Euromillions.Entities;
+using Euromillions.Services;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Globalization;
 
-namespace EuromillionsCore.Services
+namespace Euromillions.Services
 {
     public class NunofcService : INunofcService
     {

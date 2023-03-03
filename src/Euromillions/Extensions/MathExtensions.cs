@@ -1,9 +1,9 @@
-﻿using EuromillionsCore.Entities;
+﻿using Euromillions.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EuromillionsCore.Extensions
+namespace Euromillions.Extensions
 {
     public static class MathExtensions
     {

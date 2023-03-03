@@ -1,12 +1,12 @@
-﻿using EuromillionsCore.Interfaces;
-using EuromillionsCore.Entities;
+﻿using Euromillions.Interfaces;
+using Euromillions.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EuromillionsCore
+namespace Euromillions
 {
     class Program
     {

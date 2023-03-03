@@ -1,8 +1,8 @@
-﻿using EuromillionsCore.Entities;
+﻿using Euromillions.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace EuromillionsCore.Interfaces
+namespace Euromillions.Interfaces
 {
     interface INunofcService
     {

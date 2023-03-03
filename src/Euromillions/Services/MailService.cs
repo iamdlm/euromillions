@@ -1,5 +1,5 @@
-﻿using EuromillionsCore.Interfaces;
-using EuromillionsCore.Entities;
+﻿using Euromillions.Interfaces;
+using Euromillions.Entities;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Net.Mail;
 using System.Threading.Tasks;
 
-namespace EuromillionsCore.Services
+namespace Euromillions.Services
 {
     public class MailService : IMailService
     {

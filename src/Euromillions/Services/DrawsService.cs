@@ -1,12 +1,12 @@
-﻿using EuromillionsCore.Entities;
-using EuromillionsCore.Interfaces;
+﻿using Euromillions.Entities;
+using Euromillions.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EuromillionsCore.Extensions;
+using Euromillions.Extensions;
 using Microsoft.Extensions.Configuration;
 
-namespace EuromillionsCore.Services
+namespace Euromillions.Services
 {
     public class DrawsService : IDrawsService
     {

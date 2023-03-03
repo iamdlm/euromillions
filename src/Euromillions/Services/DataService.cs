@@ -1,12 +1,12 @@
-﻿using EuromillionsCore.Interfaces;
-using EuromillionsCore.Entities;
+﻿using Euromillions.Interfaces;
+using Euromillions.Entities;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
-namespace EuromillionsCore.Services
+namespace Euromillions.Services
 {
     public class DataService : IDataService
     {

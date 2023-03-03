@@ -1,7 +1,7 @@
-﻿using EuromillionsCore.Entities;
+﻿using Euromillions.Entities;
 using System.Collections.Generic;
 
-namespace EuromillionsCore.Interfaces
+namespace Euromillions.Interfaces
 {
     interface IMailService
     {

@@ -1,11 +1,11 @@
-﻿using EuromillionsCore.Interfaces;
-using EuromillionsCore.Services;
+﻿using Euromillions.Interfaces;
+using Euromillions.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
 
-namespace EuromillionsCore
+namespace Euromillions
 {
     class Startup
     {
