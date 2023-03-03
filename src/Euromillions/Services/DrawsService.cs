@@ -80,7 +80,8 @@ namespace EuromillionsCore.Services
                     return false;
                 }
 
-                int average = MathExtensions.Average(pastDraws);
+                int average = (int)Math.Round(pastDraws.Average(x => x.Numbers.Sum()));
+
                 int stdDev = MathExtensions.StandardDeviation(pastDraws, average);
 
                 return IsDrawValid(draw, MathExtensions.LowerLimit(average, stdDev), MathExtensions.UpperLimit(average, stdDev));
