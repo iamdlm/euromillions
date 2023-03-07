@@ -72,7 +72,7 @@ namespace Euromillions.Services
                 {
                     return false;
                 }
-                    
+
                 // Ignore draws already drawn
 
                 if (!IsNotEqualPastDraws(draw, pastDraws))
@@ -80,11 +80,11 @@ namespace Euromillions.Services
                     return false;
                 }
 
-                int average = (int)Math.Round(pastDraws.Average(x => x.Numbers.Sum()));
+                int mean = (int)Math.Round(pastDraws.Average(x => x.Numbers.Sum()));
 
-                int stdDev = MathExtensions.StandardDeviation(pastDraws, average);
+                int stdDev = (int)Math.Round(pastDraws.StandardDeviation(x => x.Numbers.Sum(), mean));
 
-                return IsDrawValid(draw, MathExtensions.LowerLimit(average, stdDev), MathExtensions.UpperLimit(average, stdDev));
+                return IsDrawValid(draw, mean - stdDev, mean + stdDev);
             }
 
             return IsDrawValid(draw, NUMBERS_LOWER_LIMIT, NUMBERS_UPPER_LIMIT);
@@ -332,12 +332,13 @@ namespace Euromillions.Services
             List<int> pastDrawsPoints = CalculatePastDrawsPoints(pastDraws);
 
             int pastDrawsPointsAvg = Convert.ToInt32(pastDrawsPoints.Average());
-            int pastDrawsPointsStd = MathExtensions.StandardDeviation(pastDrawsPoints, pastDrawsPointsAvg);
+            int pastDrawsPointsStd = (int)Math.Round(pastDrawsPoints.StandardDeviation(x => x), pastDrawsPointsAvg);
 
             int drawPointsAvg = CalculateDrawPoints(draw, pastDraws);
 
-            return drawPointsAvg >= MathExtensions.LowerLimit(pastDrawsPointsAvg, pastDrawsPointsStd) && 
-                drawPointsAvg <= MathExtensions.UpperLimit(pastDrawsPointsAvg, pastDrawsPointsStd);
+            return 
+                drawPointsAvg >= (pastDrawsPointsAvg - pastDrawsPointsStd) && 
+                drawPointsAvg <= (pastDrawsPointsAvg + pastDrawsPointsStd);
         }
 
         private static List<int> CalculatePastDrawsPoints(List<Draw> pastDraws)
