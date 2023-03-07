@@ -332,7 +332,7 @@ namespace Euromillions.Services
             List<int> pastDrawsPoints = CalculatePastDrawsPoints(pastDraws);
 
             int pastDrawsPointsAvg = Convert.ToInt32(pastDrawsPoints.Average());
-            int pastDrawsPointsStd = (int)Math.Round(pastDrawsPoints.StandardDeviation(x => x), pastDrawsPointsAvg);
+            int pastDrawsPointsStd = (int)Math.Round(pastDrawsPoints.StandardDeviation(x => x, pastDrawsPointsAvg));
 
             int drawPointsAvg = CalculateDrawPoints(draw, pastDraws);
 
